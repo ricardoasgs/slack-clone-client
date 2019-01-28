@@ -1,12 +1,28 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
+import {
+  ApolloClient,
+  createNetworkInterface,
+  ApolloProvider
+} from "react-apollo";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import { API_URL } from "./config/constants";
+import Routes from "./routes";
+import { register as registerServiceWorker } from "./serviceWorker";
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();
+const networkInterface = createNetworkInterface({
+  uri: API_URL
+});
+
+const client = new ApolloClient({
+  networkInterface
+});
+
+const App = (
+  <ApolloProvider client={client}>
+    <Routes />
+  </ApolloProvider>
+);
+
+ReactDOM.render(App, document.getElementById("root"));
+registerServiceWorker();
